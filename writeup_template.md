@@ -12,36 +12,51 @@ The goals / steps of this project are the following:
 * Make a pipeline that finds lane lines on the road
 * Reflect on your work in a written report
 
-
-[//]: # (Image References)
-
-[image1]: ./examples/grayscale.jpg "Grayscale"
-
 ---
 
 ### Reflection
 
 ### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
 
-My pipeline consisted of 5 steps. First, I converted the images to grayscale, then I .... 
+My pipeline consisted of 5 steps.
 
-In order to draw a single line on the left and right lanes, I modified the draw_lines() function by ...
+1. Convert the images to grayscale.
 
-If you'd like to include images to show how the pipeline works, here is how to include an image: 
+<img src=./test_images_output/example_original.png width=20%>
+<img src=./test_images_output/example_gray.png width=20%>
 
-![alt text][image1]
+2. Apply Gaussian smoothing and blurring.
+
+<img src=./test_images_output/example_blur_gray.png width=20%>
+
+3. Find edges by Canny edge detection.
+
+<img src=./test_images_output/example_canny.png width=20%>
+
+4. Localize the region of interest.
+
+<img src=./test_images_output/example_masked.png width=20%>
+
+5. Apply Hough transform to find lines and draw them.
+
+<img src=./test_images_output/example_draw_lane_lines.png width=20%>
+
+In order to draw a single line on the left and right lanes at step 5, I modified the draw_lines() function by introducing the first order least squares polynomial fit for each left and right lines.
 
 
 ### 2. Identify potential shortcomings with your current pipeline
 
+Potential shortcomings are reporesetned below: 
 
-One potential shortcoming would be what would happen when ... 
-
-Another shortcoming could be ...
+1. Manual tuning of parameters can be time consuming and biased by the set of the images.
+2. The parameters for the region of interest at step 4 cannot be always reasonable when vehicle body roll, pitch and yaw occur.
+3. Litters on the road can be detected as lines.
 
 
 ### 3. Suggest possible improvements to your pipeline
 
-A possible improvement would be to ...
+Possible improvements would be:
 
-Another potential improvement could be to ...
+1. Automate parameter tuning with more dataset. The dataset should contain the raw images and ground truth.
+2. Detect body roll and pitch and calibrate the interpolation algorithm using those values. Algorithm for detecting roll and pitch will need to be developed.
+3. Limit the region of interest more tightly and the possible slope amount for interpolated lines using the road witdth and the focus of expansion values.
